@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>10-事件</title>
+		<script src="../js/react.js"></script>
+		<script src="../js/react-dom.js"></script>
+		<script src="../js/browser.min.js"></script>
+	</head>
+	<body>
+		<div id="example"></div>
+		<div id="example2"></div>
+		
+		<script type="text/babel">
+			var HelloMessage = React.createClass({
+				getInitialState : function (){
+					return {value : 'Hello World!'};
+				},
+				handleClick : function (){
+					this.setState({value : '菜鸟教程'});//点击事件触发的回调函数，待设置好状态值之后又会自动调用this.render渲染页面
+				},
+				render : function (){
+					var value = this.state.value;
+					return (
+						<div>
+							<button onClick={this.handleClick}>点我</button>
+							<p>{value}</p>
+						</div>
+					);
+				}
+			});
+			
+			ReactDOM.render(
+				<HelloMessage />,
+				document.getElementById('example')
+			);
+			
+			
+			//例二：从子组件中更新父组件的 state：在父组件通过创建事件句柄 (handleChange) ，并作为 prop (updateStateProp) 传递到你的子组件上
+			var Content = React.createClass({
+				render : function (){
+					return (
+						<div>
+							<button onClick={this.props.updataStateProp}>点我</button>
+							<p>{this.props.myDataProp}</p>
+						</div>
+					);
+				}
+			});
+			
+			var HelloMessage = React.createClass({
+				getInitialState : function (){
+					return {value : 'Hello World!'};
+				},
+				handleClick : function (){
+					this.setState({value : '菜鸟教程'});
+				},
+				render : function (){
+					var value = this.state.value;
+					return (
+						<Content myDataProp={value} updataStateProp={this.handleClick}></Content>
+					);
+				}
+			});
+			ReactDOM.render(
+				<HelloMessage />,
+				document.getElementById("example2")
+			);
+		</script>
+	</body>
+</html>

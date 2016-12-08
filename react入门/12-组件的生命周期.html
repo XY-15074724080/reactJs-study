@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>12-组件的生命周期</title>
+		<script src="../js/react.js"></script>
+		<script src="../js/react-dom.js"></script>
+		<script src="../js/browser.min.js"></script>
+	</head>
+	<body>
+		<!--
+			组件的生命周期分成三个状态：
+	        Mounting：已插入真实 DOM
+	        Updating：正在被重新渲染
+	        Unmounting：已移除真实 DOM
+
+			React 为每个状态都提供了两种处理函数，will 函数在进入状态之前调用，did 函数在进入状态之后调用，三种状态共计五种处理函数。
+	        componentWillMount()：在渲染前调用,在客户端也在服务端。
+	        componentDidMount()：在第一次渲染后调用，只在客户端。之后组件已经生成了对应的DOM结构，可以通过this.getDOMNode()来进行访问。 如果你想和其他JavaScript框架一起使用，可以在这个方法中调用setTimeout, setInterval或者发送AJAX请求等操作(防止异部操作阻塞UI)。
+	        componentWillUpdate(object nextProps, object nextState)：在组件接收到新的props或者state但还没有render时被调用。在初始化时不会被调用。
+	        componentDidUpdate(object prevProps, object prevState)：在组件完成更新后立即调用。在初始化时不会被调用。
+        	componentWillUnmount()：在组件从 DOM 中移除的时候立刻被调用。
+			
+			此外，React 还提供两种特殊状态的处理函数。
+	        componentWillReceiveProps(object nextProps)：在已加载组件接收到一个新的prop时被调用。这个方法在初始化render时不会被调用。
+	        shouldComponentUpdate(object nextProps, object nextState)：组件判断是否重新渲染时调用
+		-->
+		<div id="example"></div>
+		<div id="example2"></div>
+		<script type="text/babel">
+			//在Hello组件加载以后，通过 componentDidMount 方法设置一个定时器，每隔100毫秒，就重新设置组件的透明度，从而引发重新渲染。
+			var Hello = React.createClass({
+				getInitialState : function (){
+					return {
+						opacity : 1.0
+					};
+				},
+				componentDidMount : function (){
+					this.timer = setInterval(function(){
+						var opacity = this.state.opacity;
+						opacity -= .05;
+						if(opacity < 0.1){
+							opacity=1.0;
+						}
+						this.setState({opacity : opacity});
+					}.bind(this),100);//.bind(this)=>Function.prototype.bind = function (scope) {
+																//	    var fn = this;
+																//	    return function () {
+																//	        return fn.apply(scope);
+																//	    };
+																//	}
+				},//在setInterval()中定义的回调函数，是在同步代码执行完后，随着事件触发来异步执行的，此时函数的上下文Context已经由定义该函数的Script文件变为全局变量，如果不通过bind(this)来指定由组件实例作为上下文的话，回调函数中的this会指向全局变量中的Window变量，显然不是我们想要的结果。
+				render : function (){
+					return (
+						<div style={{opacity:this.state.opacity}}>
+							Hello {this.props.name}
+						</div>
+					);
+				}
+			});
+			
+			ReactDOM.render(
+				<Hello name="john" />,
+				document.getElementById("example")
+			);
+			//另外，组件的style属性的设置方式也值得注意，不能写成
+    		//	style="opacity:{this.state.opacity};"
+			//	而要写成
+    		//	style={{opacity: this.state.opacity}}
+			//	这是因为 React 组件样式是一个对象，所以第一重大括号表示这是 JavaScript 语法，第二重大括号表示样式对象。
+			
+			
+			
+			//以下实例初始化 state ， setNewnumber 用于更新 state。所有生命周期在 Content 组件中。
+			var Button = React.createClass({
+				getInitialState : function (){
+					return {
+						data : 0
+					};
+				},
+				setNewnumber : function (){
+					this.setState({data : this.state.data + 1});
+				},
+				render : function(){
+					return (
+						<div>
+							<button onClick={this.setNewnumber}>INCREMENT</button>
+							<Content myNumber={this.state.data}></Content>
+						</div>
+					);
+				}
+			});
+			
+			var Content = React.createClass({
+				componentWillMount : function(){
+					alert('Component WILL MOUNT!');
+				},
+				componentDidMount : function(){
+					alert('Component DID MOUNT!');
+				},
+				componentWillReceiveProps : function(newProps){
+					alert('Component WILL RECIEVE PROPS!');
+				},
+				shouldComponentUpdate : function(newProps,newState){
+					alert('true');
+					return true;
+				},
+				componentWillUpdate : function(nextProps, nextState) {
+			        alert('Component WILL UPDATE!');
+			 	},
+			  	componentDidUpdate : function(prevProps, prevState) {
+			        alert('Component DID UPDATE!');
+			  	},
+			  	componentWillUnmount : function() {
+			         alert('Component WILL UNMOUNT!');
+			  	},
+			  	render : function(){
+			  		return (
+			  			<div>
+			  				<h3>{this.props.myNumber}</h3>
+			  			</div>
+			  		);
+			  	}
+			});
+			
+			ReactDOM.render(
+				<div>
+					<Button />
+				</div>,
+				document.getElementById("example2")
+			);
+		</script>
+	</body>
+</html>

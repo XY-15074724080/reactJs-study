@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>3-JSX语法</title>
+		<script src="../js/react.js"></script>
+		<script src="../js/react-dom.js"></script>
+		<script src="../js/browser.min.js"></script>
+	</head>
+	<body>
+		<div id="example"></div>
+		<div id="example2"></div>
+		<div id="example3"></div>
+		<div id="example4"></div>
+		
+		<!--HTML 语言直接写在 JavaScript 语言之中，不加任何引号，这就是 JSX 的语法，它允许 HTML 与 JavaScript 的混写-->
+		<!--JSX 的基本语法规则：遇到 HTML 标签（以 < 开头），就用 HTML 规则解析；遇到代码块（以 { 开头），就用 JavaScript 规则解析。-->
+		<script type="text/babel">
+		    var names = ['Alice', 'Emily', 'Kate'];
+		
+		    ReactDOM.render(
+		      	<div>
+		      	{
+		        	names.map(function (name) {
+			          	return <div>Hello, {name}!</div>
+			        })
+		      	}
+		      	</div>,
+		      	document.getElementById('example')
+		    );
+		    
+		    //JSX 允许直接在模板插入 JavaScript 变量。如果这个变量是一个数组，则会展开这个数组的所有成员
+		    var arr = [
+		      	<h1>Hello world!</h1>,
+		      	<h2>React is awesome</h2>,
+		    ];
+		    ReactDOM.render(//arr变量是一个数组，结果 JSX 会把它的所有成员，添加到模板
+		      	<div>{arr}</div>,
+		      	document.getElementById('example2')
+		    );
+
+			//我们可以在 JSX 中使用 JavaScript 表达式。表达式写在花括号 {} 中。
+			var arr = [
+		      	<h1>Hello world!</h1>,
+		      	<h2>React is awesome{1+1}</h2>,
+		    ];
+		    ReactDOM.render(//arr变量是一个数组，结果 JSX 会把它的所有成员，添加到模板
+		      	<div>{arr}</div>,
+		      	document.getElementById('example3')
+		    );
+		    
+		    //在 JSX 中不能使用 if else 语句，但可以使用 conditional (三元运算) 表达式来替代。以下实例中如果变量 i 等于 1 浏览器将输出 true, 如果修改 i 的值，则会输出 false.
+		   	var i = 1;
+	      	ReactDOM.render(
+	      		<div>
+	      	  		<h1>{i == 1 ? 'True!' : 'False'}</h1>
+	        	</div>,
+	      		document.getElementById('example4')
+	      	);
+		</script>
+	</body>
+</html>

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>7-this.state</title>
+		<script src="../js/react.js"></script>
+		<script src="../js/react-dom.js"></script>
+		<script src="../js/browser.min.js"></script>
+	</head>
+	<body>
+		<!--组件免不了要与用户互动，React 的一大创新，就是将组件看成是一个状态机，一开始有一个初始状态，然后用户互动，导致状态变化，从而触发重新渲染 UI-->
+		<div id="example"></div>
+		<script type="text/babel">
+			var ButtonLike = React.createClass({
+				getInitialState : function (){//getInitialState 方法用于定义初始状态，也就是一个对象，这个对象可以通过 this.state 属性读取
+					return {liked : 'false'};
+				},
+				handleClick : function (){
+					this.setState({liked : !this.state.liked});//每次点击都修改状态值，然后重新渲染
+				},
+				render : function (){
+					var text = this.state.liked ? 'like' : 'haven\'t like' ;
+					return (
+						<p onClick={this.handleClick}>
+							You {text} this. Click to toggle.
+						</p>
+					);//当用户点击组件，导致状态变化，this.setState 方法就修改状态值，每次修改以后，自动调用 this.render 方法，再次渲染组件。
+				}
+			});
+			
+			ReactDOM.render(
+				<ButtonLike />,
+				document.getElementById('example')
+			);
+			
+			//由于 this.props 和 this.state 都用于描述组件的特性，可能会产生混淆。一个简单的区分方法是，this.props 表示那些一旦定义，就不再改变的特性，而 this.state 是会随着用户互动而产生变化的特性。-----------------------------------------props专一，state多情
+		</script>
+	</body>
+</html>

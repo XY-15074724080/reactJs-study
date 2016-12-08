@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>4-组件</title>
+		<script src="../js/react.js"></script>
+		<script src="../js/react-dom.js"></script>
+		<script src="../js/browser.min.js"></script>
+		<style>
+			.box{
+				color : red ;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="example"></div>
+		
+		<div id="example2"></div>
+		
+		<script type="text/babel">
+			//React 允许将代码封装成组件（component），然后像插入普通 HTML 标签一样，在网页中插入这个组件。React.createClass 方法就用于生成一个组件类
+			var HelloMessage = React.createClass({//创建一个组件类
+				render : function (){
+					//添加样式方法一：
+					//return <h1 className="box">Hello { this.props.name }</h1>;
+					//添加样式方法二：
+					//return <h1 style={ { color:'green' } }>Hello { this.props.name }</h1>
+					//方法二可拆分为：
+					var setStyle = {
+						color : 'blue'
+					}
+					return <h1 style={ setStyle }>Hello { this.props.name }</h1>
+				}
+			});
+			//添加组件属性，有一个地方需要注意，就是 class 属性需要写成 className ，for 属性需要写成 htmlFor ，这是因为 class 和 for 是 JavaScript 的保留字。方法二设置样式时使用的是样式对象，一个{}是告诉编译器要用 JavaScript 规则解析，{}里面的{ color:'green' }部分就是一个样式对象
+			
+			
+			//var HelloMessage = React.createClass({//创建一个组件类
+			//	render : function (){
+			//		return <h1>Hello { this.props.name }</h1><p>some message</p>;
+			//	}/////////////////报错，因为组件类只能包含一个顶层标签
+			//});
+			
+			ReactDOM.render( //模板插入 <HelloMessage /> 时，会自动生成 HelloMessage 的一个实例。所有组件类都必须有自己的 render 方法，用于输出组件。
+				//注意，原生 HTML 元素名以小写字母开头，而自定义的 React 类名以大写字母开头，比如HelloMessage不能写成helloMessage。另外，组件类只能包含一个顶层标签，否则也会报错。
+				<HelloMessage name="John" />, 
+				document.getElementById("example")
+			);//组件的用法与原生的 HTML 标签完全一致，可以任意加入属性，比如 <HelloMessage name="John"> ，就是 HelloMessage 组件加入一个 name 属性，值为 John。组件的属性可以在组件类的 this.props 对象上获取，比如 name 属性就可以通过 this.props.name 读取。
+
+
+
+
+
+
+
+			//复合组件：我们可以通过创建多个组件来合成一个组件，即把组件的不同功能点进行分离。
+			var WebSite = React.createClass({//两个小模块组成的一个大模块
+				render : function (){
+					return (
+						<div>
+							<Name name = { this.props.name } />
+							<Link site = { this.props.site}  />
+						</div>
+					);
+				}
+			});
+			
+			var Name= React.createClass({//一个小模块
+				render : function (){
+					return <h1>{ this.props.name}</h1>
+				}
+			});
+			
+			var Link = React.createClass({//一个小模块
+				render : function (){
+					return <a href={ this.props.site }>{ this.props.site }</a>
+				}
+			});
+			
+			ReactDOM.render(
+				<WebSite name = "这是菜鸟教程的案例" site = "http://www.runoob.com" />,
+				document.getElementById("example2")
+			);
+			//实例中 WebSite 组件使用了 Name 和 Link 组件来输出对应的信息，也就是说 WebSite 拥有 Name 和 Link 的实例。
+		</script>
+	</body>
+</html>

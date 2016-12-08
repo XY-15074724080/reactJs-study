@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>1-HTML 模板</title>
+		<script src="../js/react.js"></script><!--react.js 是 React 的核心库-->
+	    <script src="../js/react-dom.js"></script><!--react-dom.js 是提供与 DOM 相关的功能-->
+	    <script src="../js/browser.min.js"></script><!--Browser.js 的作用是将 JSX 语法转为 JavaScript 语法-->
+	</head>
+	<body>
+		<div id="example"></div>
+		
+		<!--
+
+    	1、JSX是什么——JSX其实是JavaScript的扩展，React为了代码的可读性更方便地创建虚拟DOM等原因，加入了一些类似XML的语法的扩展。
+
+    	2、编译器——jsxTransformer
+    	JSX代码并不能直接运行，需要将它编译成正常的JavaScript表达式才能运行，jsxTransformer.js就是这一编译器的角色。
+
+    	3、第二代编译器——babel
+    		React官方博客发布了一篇文章，声明其自身用于JSX语法解析的编译器JSTransform已经过期，不再维护，React JS和React Native已经全部采用第三方Babel的JSX编译器实现。原因是两者在功能上已经完全重复，而Babel作为专门的JavaScript语法编译工具，提供了更为强大的功能。而browser.js是babel编译器的浏览器版本。
+
+-->
+	    <script type="text/babel">//type 属性为 text/babel 。这是因为 React 独有的 JSX 语法，跟 JavaScript 不兼容。凡是使用 JSX 的地方，都要加上 type="text/babel"-->
+	      	//** Our code goes here! **
+	    </script>
+	</body>
+</html>

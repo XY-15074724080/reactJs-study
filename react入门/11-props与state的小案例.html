@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>11-props与state的小案例</title>
+		<script src="../js/react.js"></script>
+		<script src="../js/react-dom.js"></script>
+		<script src="../js/browser.min.js"></script>
+	</head>
+	<body>
+		<div id="container"></div>
+		
+		<script type="text/babel">
+
+			//测试点击事件(显示和隐藏)
+			var TestClickComponent = React.createClass({
+				handleClick : function (event){//这个是react封装的event对象，是在原生的js的event基础上封装的，所以它同时具有了原生event方法
+					//this.refs.tip这样拿到的是一个react Component，而不是真实的DOM节点，要拿到真实的DOM节点，就要用react为我们封装的React.findDOMNode()，这里与以前的版本有所不同，因为react.js已经拆分成了react.js和react-dom.js两个文件，所以节点的调用不能用React.findDOMNode()，而需要用ReactDOM.findDOMNode()了
+					var tipElement = ReactDOM.findDOMNode(this.refs.tip);
+					if(tipElement.style.display === 'none'){
+						tipElement.style.display = 'inline';
+					}else{
+						tipElement.style.display = 'none'
+					}
+					
+					//正因为它具有了原生event方法，所以我们可以：
+					event.stopPropagation();//阻止事件冒泡
+					event.preventDefault();//阻止事件的默认行为
+				},
+				render : function(){
+					return (//要操作span里面的内容，就要拿到span标签，怎么拿到span标签呢？通过react refs，通过ref属性来给子组件起一个名字，然后通过this.refs就可以索引到这个子组件
+						<div>
+							<button onClick={this.handleClick}>显示 | 隐藏</button><span ref='tip'>测试点击</span>
+						</div>
+					);
+				}
+			});
+			//测试表单内容与文本内容同步
+			var TestInputComponent = React.createClass({
+				getInitialState : function (){
+					return {
+						inputContent : ''
+					};
+				},
+				handleChange : function (event){
+					this.setState({
+						inputContent : event.target.value
+					});
+					
+					event.stopPropagation();//阻止事件冒泡
+					event.preventDefault();//阻止事件的默认行为
+				},
+				render : function(){
+					return (//同样地，这里也只能包一个reactElement，所以最外层也要用<div>把两个包起来
+						<div>
+							<input type="text"  onChange={this.handleChange}/><span>{this.state.inputContent}</span>
+						</div>
+					);
+				}
+			});
+			
+			ReactDOM.render(//这里第一个参数只能放一个reactElement，要放两个的话，就用一个<div>包起来
+			<div>
+				<TestClickComponent />
+				<br /><br />
+				<TestInputComponent />
+			</div>,
+			document.getElementById("container")
+			);
+		</script>
+	</body>
+</html>

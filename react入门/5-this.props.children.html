@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>5-this.props.children</title>
+		<script src="../js/react.js"></script>
+		<script src="../js/react-dom.js"></script>
+		<script src="../js/browser.min.js"></script>
+	</head>
+	<body>
+		<div id="example"></div>
+		<div id="example2"></div>
+		<div id="example3"></div>
+		<div id="example4"></div>
+		
+		<script type="text/babel">
+			//this.props 对象的属性与组件的属性一一对应，但是有一个例外，就是 this.props.children 属性。它表示组件的所有子节
+		    var NotesList = React.createClass({
+		        render: function() {
+		        	console.log(this.props.children);
+		        	
+		          	return (
+		            	<ol>
+		              	{
+		                	React.Children.map(this.props.children, function (child) {
+		                  		return <li>{child}</li>;
+		                	})
+		              	}
+		            	</ol>
+		          	);
+		        }
+		    });
+		
+		    ReactDOM.render(
+		    	//NoteList 组件有两个 span 子节点，它们都可以通过 this.props.children 读取
+		        <NotesList>
+		          	<span>hello</span>
+		          	<span>world</span>
+		        </NotesList>,
+		        document.getElementById('example')
+			);
+			//这里需要注意， this.props.children 的值有三种可能：如果当前组件没有子节点，它就是 undefined ;如果有一个子节点，数据类型是 object ；如果有多个子节点，数据类型就是 array 。所以，处理 this.props.children 的时候要小心。
+			//React 提供一个工具方法 React.Children 来处理 this.props.children 。我们可以用 React.Children.map 来遍历子节点，而不用担心 this.props.children 的数据类型是 undefined 还是 object。更多的 React.Children 的方法，请参考官方文档(https://facebook.github.io/react/docs/react-api.html)。
+			
+			ReactDOM.render(
+				//NoteList 组件有一个 span 子节点，this.props.children是一个Object，这个案例的最终结构为：<div id="example"><ol data-reactroot><li><span>one span node</span></li></ol></div>
+		        <NotesList>
+		          	<span>one span node</span>
+		        </NotesList>,
+		        document.getElementById('example2')
+			);
+			
+			ReactDOM.render(
+				//NoteList 组件没有子节点，this.props.children为undefined，所以这个例子的最终结构是这样：<div id="example3"><ol data-reactroot></ol></div>
+				
+		        <NotesList>
+				
+		        </NotesList>,
+		        document.getElementById('example3')
+			);
+			
+			ReactDOM.render(
+				//这里NoteList 组件有一个文本子节点，所以它的最终结构为：<div id="example4"><ol data-reactroot><li>null</li></ol></div>
+		        <NotesList>
+					null
+		        </NotesList>,
+		        document.getElementById('example4')
+			);
+			
+		</script>
+	</body>
+</html>

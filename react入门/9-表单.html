@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>9-表单</title>
+		<script src="../js/react.js"></script>
+		<script src="../js/react-dom.js"></script>
+		<script src="../js/browser.min.js"></script>
+	</head>
+	<body>
+		<div id="example"></div>
+		<!--用户在表单填入的内容，属于用户跟组件的互动，所以不能用 this.props 读取-->
+		<script type="text/babel">
+			var MyComponent = React.createClass({
+				getInitialState : function(){
+					return {value : 'Hello!'};
+				},
+				handleChange : function (event){//input一变化，就会执行这里来修改状态值，然后再自动调用this.render渲染组件
+					//console.log(event.target);//=> <input type="text" />
+					this.setState({value : event.target.value});
+				},
+				render : function(){
+					var value = this.state.value ;
+					return (
+						<div>
+							<input type="text" onChange={this.handleChange} value={value}/>
+							<p>{value}</p>
+						</div>
+					);
+				}
+			});
+			
+			ReactDOM.render(
+				<MyComponent />,
+				document.getElementById("example")
+			);
+			//文本输入框的值，不能用 this.props.value 读取，而要定义一个 onChange 事件的回调函数，通过 event.target.value 读取用户输入的值。textarea 元素、select元素、radio元素都属于这种情况
+			
+			
+			
+			//例二：如何在子组件上使用表单
+			var Content = React.createClass({
+				render : function (){
+					return (
+						<div>
+							<input type="text" value={this.props.myDataProp} onChange={this.props.updateStateProp} />
+							<h4>{this.props.myDataProp}</h4>
+						</div>
+					);
+				}
+			});
+			
+			var HelloMessage = React.createClass({
+				getInitialState : function (){
+					return {
+						value : 'Hello'
+					};
+				},
+				handleChange : function (){
+					this.setState({value : event.target.value});
+				},
+				render : function (){// onChange 方法将触发 state 的更新 并将更新的值传递到子组件的输入框的 value 上来重新渲染界面。
+					return (//你需要在父组件通过创建事件句柄 (handleChange) ，并作为 prop (updateStateProp) 传递到你的子组件上。
+						<div>
+							<Content myDataProp={value} updateStateProp={this.handleChange}></Content>
+						</div>
+					);
+				}
+			});
+		</script>
+	</body>
+</html>
