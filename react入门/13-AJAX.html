@@ -49,6 +49,56 @@
 				<UserGist source = "https://api.github.com/users/octocat/gists" />,
 				document.getElementById('example')
 			);
+			
+			//我们甚至可以把一个Promise对象传入组件
+			var RepoList = React.createClass({
+				getInitialState : function (){
+					return {
+						loading : true,//表示Promise对象抓取数据的状态，正在抓取为true，抓取完毕(报错或者成功)为false，这里初始化为true
+						error : null,
+						data :null
+					};
+				},
+				componentDidMount : function (){
+					this.props.promise.then(//Promise是抽象异步处理对象以及对其进行各种操作的组件。
+						//对通过new生成的promise对象为了设置其值在 resolve(成功) / reject(失败)时调用的回调函数 可以使用promise.then() 实例方法。=>promise.then(onFulfilled, onRejected)
+						//resolve(成功)时--onFulfilled 会被调用
+						//reject(失败)时--onRejected 会被调用
+						//onFulfilled、onRejected 两个都为可选参数。
+
+						value => this.setState({loading : false,data : value}),
+						error => this.setState({loading : false,error : error})
+						//ES6允许使用“箭头”（=>）定义函数。后面这一句相当于function(error){return this.setState({loading : false,error : error})}
+					);
+				},
+				render : function (){
+					if(this.state.loading){//表示Promise对象抓取数据的状态，正在抓取为true，抓取完毕(报错或者成功)为false
+						return <span>Loading...</span>;
+					}else if(this.state.error !== null){//如果抓取失败(报错)
+						return <span>Error : {this.state.error.message}</span>;
+					}else{
+						var repos = this.state.data.items;//根据获取的数据来选取我们需要的部分
+				      	var repoList = repos.map(function (repo, index) {
+					        return (
+					          	<li key={index}><a href={repo.html_url}>{repo.name}</a> ({repo.stargazers_count} stars) <br/> {repo.description}</li>
+					        );
+					    });
+					    return (
+					        <main>
+					          	<h1>Most Popular JavaScript Projects in Github</h1>
+					          	<ol>{repoList}</ol>
+					        </main>
+						);
+						//<main> 标签规定文档的主要内容。<main> 元素中的内容对于文档来说应当是唯一的。它不应包含在文档中重复出现的内容，比如侧栏、导航栏、版权信息、站点标志或搜索表单。
+						//注意！！！在一个文档中，不能出现一个以上的 <main> 元素。<main> 元素不能是以下元素的后代：<article>、<aside>、<footer>、<header> 或 <nav>。
+					}//如果Promise对象正在抓取数据（pending状态），组件显示"正在加载"；如果Promise对象报错（rejected状态），组件显示报错信息；如果Promise对象抓取数据成功（fulfilled状态），组件显示获取的数据。
+				}
+			});
+			
+			ReactDOM.render(//从Github的API抓取数据，然后将Promise对象作为属性，传给RepoList组件。
+				<RepoList promise = {$.getJSON('https://api.github.com/search/repositories?q=javascript&sort=stars')} />,
+				document.getElementById('example2')
+			);
 		</script>
 	</body>
 </html>
