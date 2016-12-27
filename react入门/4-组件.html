@@ -42,7 +42,7 @@
 			//});
 			
 			ReactDOM.render( //模板插入 <HelloMessage /> 时，会自动生成 HelloMessage 的一个实例。所有组件类都必须有自己的 render 方法，用于输出组件。
-				//注意，原生 HTML 元素名以小写字母开头，而自定义的 React 类名以大写字母开头，比如HelloMessage不能写成helloMessage。另外，组件类只能包含一个顶层标签，否则也会报错。
+				//注意，原生 HTML 元素名以小写字母开头，而自定义的 React 类名以大写字母开头，比如HelloMessage不能写成helloMessage。另外，组件类只能包含一个顶层标签，否则也会报错。原因是一个标签会被转译成对应的React.createElement调用方法，最外层没有被包裹，显然无法转译成方法调用。
 				<HelloMessage name="John" />, 
 				document.getElementById("example")
 			);//组件的用法与原生的 HTML 标签完全一致，可以任意加入属性，比如 <HelloMessage name="John"> ，就是 HelloMessage 组件加入一个 name 属性，值为 John。组件的属性可以在组件类的 this.props 对象上获取，比如 name 属性就可以通过 this.props.name 读取。
