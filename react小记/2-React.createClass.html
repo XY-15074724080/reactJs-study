@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>2-React.createClass</title>
+		<script src="../js/react.js"></script><!--react.js 是 React 的核心库-->
+	    <script src="../js/react-dom.js"></script><!--react-dom.js 是提供与 DOM 相关的功能-->
+	    <script src="../js/browser.min.js"></script><!--Browser.js 的作用是将 JSX 语法转为 JavaScript 语法-->
+	    <style>
+	    	.btn-blue{
+	    		color:blue;
+	    	}
+	    </style>
+	</head>
+	<body>
+		<div id="example"></div>
+		<!--用React.createClass构建组件是React最传统、也是兼容性最好的方法。在0.14版本发布之前，这一直都是React官方唯一指定的组件写法-->
+		<script type="text/babel">
+			const Button = React.createClass({
+				getDefaultProps(){
+					{/*设置组件属性的默认值*/}
+					return {
+						color : 'blue',
+						text : 'Confirm'
+					}
+				},
+				render(){
+					const { color,text } = this.props;{/*es6   解构对象，直接将对象中的值分别导出到多个变量中*/}
+					return (
+						<button className={'btn btn-'+color}>
+							{/*书上是<button className={'btn btn-${color}'}>，而这是0.14版本之前的写法，这样写的话编译出来的是'btn btn-${color}'，并没有获取到color的值，这里将color写在字符串外面，因为JSX的语法规则就是遇到 { 就当做javascript语法规则解析*/}
+							<em>{text}</em>
+						</button>
+					);
+				}
+			});
+			
+			{/*从表象上看，React.createClass方法就是构建一个组件对象。当另一个组件需要调用Button组件时，只用写成<Button />，就可以被解析成React.createElement(Button)方法来创建Button实例，这意味着在一个应用中调用几次Button，就会创建几次Button实例*/}
+			ReactDOM.render(
+			<Button />,
+			document.getElementById("example")
+			);
+		</script>
+	</body>
+</html>
