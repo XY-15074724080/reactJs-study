@@ -27,8 +27,7 @@
 				render(){
 					const { color,text } = this.props;{/*es6   解构对象，直接将对象中的值分别导出到多个变量中*/}
 					return (
-						<button className={'btn btn-'+color}>
-							{/*书上是<button className={'btn btn-${color}'}>，是0.14版本之前的写法，这样写的话编译出来的是'btn btn-${color}'，并没有获取到color的值，这里将color写在字符串外面，因为JSX的语法规则就是遇到 { 就当做javascript语法规则解析*/}
+						<button className={`btn btn-${color}`}>{/*es6  模板字符串，字符串插值，${color}是模板占位符，这一段相当于<button className={'btn btn-'+color}>*/}
 							<em>{text}</em>
 						</button>
 					);
